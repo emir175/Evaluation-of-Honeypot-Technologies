@@ -1,0 +1,44 @@
+services:
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: cowrie
+    restart: unless-stopped
+    networks:
+      - honeynet
+    volumes:
+      - ~/honeypots/cowrie/log:/cowrie/cowrie-git/var/log/cowrie
+      - ~/honeypots/cowrie/downloads:/cowrie/cowrie-git/var/lib/cowrie/downloads
+
+  kippo:
+    image: tomdesinto/kippo
+    container_name: kippo
+    restart: unless-stopped
+    networks:
+      - honeynet
+
+  opencanary:
+    image: thinkst/opencanary
+    container_name: opencanary_latest
+    restart: unless-stopped
+    networks:
+      - honeynet
+    volumes:
+      - ./data/.opencanary.conf:/root/.opencanary.conf
+
+  kali:
+    build:
+      context: .
+      dockerfile: Dockerfile.kali
+    container_name: kali_tester
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    networks:
+      - honeynet
+    volumes:
+      - ./kali_data:/root/workspace
+    working_dir: /root/workspace
+
+networks:
+  honeynet:
+    driver: bridge

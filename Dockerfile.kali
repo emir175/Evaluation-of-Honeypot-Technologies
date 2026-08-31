@@ -1,0 +1,19 @@
+FROM kalilinux/kali-rolling
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y \
+    bash \
+    coreutils \
+    iputils-ping \
+    netcat-openbsd \
+    nmap \
+    openssh-client \
+    seclists \
+    wordlists \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /root/workspace
+
+CMD ["/bin/bash"]
